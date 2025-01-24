@@ -1,5 +1,5 @@
 
-import { Button, Typography, Stack, Tooltip } from "@mui/material";
+import { Button, Typography, Stack, Tooltip, Select, MenuItem } from "@mui/material";
 import { FetchTasks } from "../taskAPIs/FetchTasks";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,14 +11,17 @@ import Paper from '@mui/material/Paper';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import ClearIcon from '@mui/icons-material/Clear';
 import { DeleteTask } from "../taskAPIs/DeleteTask";
+import { AppProps } from "../AppProps";
+import { priorityOptions, statusOptions } from "../constants";
 
 interface ViewAllTasksProps {
-    setOpenTaskDialog: (value: boolean) => void;
-    setEdit: (value: boolean) => void;
-    setTaskId: (value: number|null) => void;
+    appProps: AppProps;
 }
 
-export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ setOpenTaskDialog, setEdit, setTaskId }) => {
+export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({appProps}) => {
+    const { edit, setEdit, taskId, setTaskId, openAddTaskDialog, setOpenTaskDialog, statusFilter, setStatusFilter, priorityFilter, setPriorityFilter, dueDateFiter, setDueDateFiter, status, setStatus,priority, setPriority } = appProps;
+
+
     const tasks = FetchTasks();
     if (tasks.length === 0) {
         return <Typography>Loading tasks...</Typography>;
@@ -36,6 +39,26 @@ export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ setOpenTaskDialog, s
         <Stack spacing={2}>
             <Stack direction='row' justifyContent="space-between">
                 <Typography variant='h5'>My List of Tasks</Typography>
+                <Select
+                    value={priority}
+                    onChange={(e) => setPriority(e.target.value)}
+                >
+                    {priorityOptions.map((option) => (
+                        <MenuItem key={option} value={option}>
+                            {option}
+                        </MenuItem>
+                    ))}
+                </Select>
+                <Select
+                    value={status_hmm}
+                    onChange={(e) => setStatus(e.target.value)}
+                >
+                    {statusOptions.map((option) => (
+                        <MenuItem key={option} value={option}>
+                            {option}
+                        </MenuItem>
+                    ))}
+                </Select>
                 <Button onClick={()=>setOpenTaskDialog(true)}> Add new</Button>
             </Stack>
             <TableContainer component={Paper} sx={{ maxHeight: 440 }}>

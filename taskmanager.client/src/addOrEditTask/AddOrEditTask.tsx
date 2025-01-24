@@ -5,23 +5,16 @@ import { I_AllTasks } from "../taskAPIs/I_AllTasks";
 import { useState, useEffect } from "react";
 import { FetchTaskById } from "../taskAPIs/FetchTaskById";
 import { UpdateTask } from "../taskAPIs/UpdateTask";
+import { AppProps } from "../AppProps";
+import { statusOptions, priorityOptions } from "../constants";
 
 
 interface AddOrEditTaskProps {
-    setOpenTaskDialog: (value: boolean) => void;
-    openAddTaskDialog: boolean
-    setEdit: (value: boolean) => void;
-    edit: boolean
-    taskId: number|null
-    setTaskId: (value: number | null) => void;
+    appProps: AppProps;
 }
 
-export const AddOrEditTask: React.FC<AddOrEditTaskProps> = ({ setOpenTaskDialog, openAddTaskDialog, setEdit, edit, taskId, setTaskId }) => {
-   
-    const statusOptions = ["Pending", "InProgress", "Complete"];
-    const priorityOptions = ["VeryHigh", "High", "Medium", "Low", "Skip"];
-    const [status, setStatus] = useState<string>("");
-    const [priority, setPriority] = useState<string>("");
+export const AddOrEditTask: React.FC<AddOrEditTaskProps> = ({ appProps}) => {
+    const { edit, setEdit, taskId, setTaskId, openAddTaskDialog, setOpenTaskDialog, statusFilter, setStatusFilter, priorityFilter, setPriorityFilter, dueDateFiter, setDueDateFiter, status, setStatus, priority, setPriority } = appProps;
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

@@ -47,11 +47,11 @@ namespace TaskManager.Server.Controllers
             return task;
         }
 
-        // GET: api/TaskSearch/date/{date}
-        [HttpGet("date/{date}")]
-        public async Task<ActionResult<IEnumerable<UserTask>>> GetTaskByDueDate(DateTime date)
+        // GET: api/TaskSearch/dueDate/{dueDate}
+        [HttpGet("dueDate/{dueDate}")]
+        public async Task<ActionResult<IEnumerable<UserTask>>> GetTaskByDueDate(DateTime dueDate)
         {
-            var task = await _context.UserTasks.Where(p => p.DueDate.Date == date.Date).ToListAsync();
+            var task = await _context.UserTasks.Where(p => p.DueDate.Date == dueDate.Date).ToListAsync();
 
             if (task == null)
             {
