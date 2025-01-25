@@ -42,6 +42,7 @@ export const AddOrEditTask: React.FC<AddOrEditTaskProps> = ({ appProps }) => {
         setEdit(false);
         setTaskId(null);
     }
+
     const [dataById, setDataById] = useState<I_AllTasks>({} as I_AllTasks);
     useEffect(() => {
         if (taskId !== null) {
@@ -72,7 +73,9 @@ export const AddOrEditTask: React.FC<AddOrEditTaskProps> = ({ appProps }) => {
                             required
                             name="title"
                             label="Title"
+                            multiline
                             InputLabelProps={{ shrink: true }}
+                            inputProps={{ maxLength: 100 }}
                             value={title || dataById?.title || ''}
                             defaultValue={taskId ? dataById?.title : ''}
                             onChange={(e) => setTitle(e.target.value)}
@@ -80,6 +83,7 @@ export const AddOrEditTask: React.FC<AddOrEditTaskProps> = ({ appProps }) => {
                         <TextField
                             label="Description"
                             InputLabelProps={{ shrink: true }}
+                            inputProps={{ maxLength: 250 }}
                             multiline
                             rows={3}
                             defaultValue={taskId ? dataById?.description : ''}
@@ -126,7 +130,7 @@ export const AddOrEditTask: React.FC<AddOrEditTaskProps> = ({ appProps }) => {
                     <DialogActions>
                         {edit ?
                             <Button type="submit" variant='outlined'>Update</Button> :
-                            <Button type="submit" variant='outlined'>Submit</Button>
+                            <Button type="submit"variant='outlined'>Submit</Button>
                         }
                     </DialogActions>
                 </form>

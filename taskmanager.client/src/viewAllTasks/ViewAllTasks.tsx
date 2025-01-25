@@ -10,6 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import ClearIcon from '@mui/icons-material/Clear';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { DeleteTask } from "../taskAPIs/DeleteTask";
 import { AppProps } from "../AppProps";
 import { priorityOptions, statusOptions } from "../constants";
@@ -40,9 +41,13 @@ export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
         setEdit(true);
         setTaskId(id);
     }
+    const onClearClick = () => {
+        setDueDate('');
+        setStatus('');
+        setPriority('');
+    }
 
-    return (
-        
+    return (     
         <Stack spacing={2}>
             <Typography variant='h3' sx={{ pb: 3, color: 'primary.main' }}>My List of Tasks</Typography>
             <Stack direction='row' justifyContent="space-between" sx={{ height: 40, boxShadow: 3, p:1 }}  >       
@@ -78,6 +83,11 @@ export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
                         </MenuItem>
                     ))}
                 </Select>
+                <Tooltip title={`Clear filters`} placement="top"  arrow>
+                    <Button onClick={onClearClick}>                                    
+                        <ClearIcon />
+                    </Button>
+                </Tooltip>
                 <Button variant='outlined' onClick={() => setOpenTaskDialog(true)}> Add new</Button>
             </Stack>
             <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
@@ -92,7 +102,7 @@ export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
                     {(status || priority || dueDate ? filteredTasks : tasks).map((task) => (
                         <TableRow key={task.id}>
                             {Object.keys(task).map((key) =>
-                                <TableCell key={key}>
+                                <TableCell key={key} sx={{ maxWidth: '300px',wordWrap: 'break-word', whiteSpace: 'normal' }}>
                                     {key === 'dueDate'  ?
                                         new Date(task[key]).toLocaleDateString() :
                                         task[key] as React.ReactNode}
@@ -105,10 +115,8 @@ export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
                                     </Button>
                                 </Tooltip>
                                 <Tooltip title={`Delete task ${task.title}`} arrow>
-                                    <Button
-                                        onClick={() => DeleteTask(task.id)}
-                                    >
-                                        <ClearIcon />
+                                    <Button  onClick={() => DeleteTask(task.id)}                                    >
+                                        <DeleteForeverIcon />
                                     </Button>
                                 </Tooltip>
                             </TableCell>
