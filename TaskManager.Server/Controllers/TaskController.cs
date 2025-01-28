@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TaskManager.Server.Enums;
 using TaskManager.Server.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TaskManager.Server.Controllers
 
@@ -42,10 +44,10 @@ namespace TaskManager.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTask(int id, [FromBody] UserTask task)
         {
-            if (id != task.Id)
-            {
-                return BadRequest();
-            }
+            if (id != task.Id ||
+                !Enum.IsDefined(typeof(StatusEnum), task.Status) ||
+                !Enum.IsDefined(typeof(PriorityEnum), task.Priority))
+            { return BadRequest(); }
 
             _context.Entry(task).State = EntityState.Modified;
 
@@ -73,9 +75,18 @@ namespace TaskManager.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<UserTask>> PostTask(UserTask task)
         {
-            _context.UserTasks.Add(task);
-            await _context.SaveChangesAsync();
-
+            if (!Enum.IsDefined(typeof(StatusEnum), task.Status) ||
+                !Enum.IsDefined(typeof(PriorityEnum), task.Priority))
+            { return BadRequest(); }
+            try
+            {
+                _context.UserTasks.Add(task);
+                await _context.SaveChangesAsync();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+            }
             return CreatedAtAction(nameof(GetTask), new { id = task.Id }, task);
         }
 

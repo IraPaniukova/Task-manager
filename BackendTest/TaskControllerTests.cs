@@ -79,10 +79,10 @@ namespace BackendTest
         }
 
         [Fact]
-        public async Task PostTask_AddsNewTask()
+        public async Task PostTask_AddsNew_ValidTask()
         {
             // Arrange
-            var newTask = new UserTask { Title = "New Task", DueDate = DateTime.Now.AddDays(3), Priority = "Very high", Status = "InProgress" };
+            var newTask = new UserTask { Title = "New Task", DueDate = DateTime.Now.AddDays(3), Priority = "VeryHigh", Status = "InProgress" };
 
             // Act
             var postResult = await _controller.PostTask(newTask);
@@ -95,6 +95,31 @@ namespace BackendTest
             Assert.NotNull(tasks?.LastOrDefault());
             Assert.Equal("New Task", tasks?.LastOrDefault()?.Title);
             Assert.Equal("InProgress", tasks?.LastOrDefault()?.Status);
+        }
+        [Fact]
+        public async Task PostTask_AddsNew_InvalidStatusTask()
+        {
+            // Arrange
+            var newTask = new UserTask { Title = "New Task", DueDate = DateTime.Now.AddDays(3), Priority = "VeryHigh", Status = "Invalid" };
+
+            // Act
+            var result = await _controller.PostTask(newTask);
+
+            // Assert
+            var actionResult = Assert.IsType<BadRequestResult>(result.Result);           
+        }
+        [Fact]
+        public async Task PostTask_AddsNew_InvalidPriorityTask()
+        {
+            // Arrange
+            var newTask = new UserTask { Title = "New Task", DueDate = DateTime.Now.AddDays(3), Priority = "Invalid", Status = "InProgress" };
+
+            // Act
+            var result = await _controller.PostTask(newTask);
+
+            // Assert
+            var actionResult = Assert.IsType<BadRequestResult>(result.Result);
+
         }
 
         [Fact]
