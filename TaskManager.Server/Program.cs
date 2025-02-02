@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Server.Models;
 
+var allowCORS = "_allowCORS";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,10 +15,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: allowCORS,
+          policy =>
+           {
+           policy.WithOrigins("https://localhost:53315");//frontend host
+           });
+});
+
 var app = builder.Build();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
+app.UseCors(allowCORS);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

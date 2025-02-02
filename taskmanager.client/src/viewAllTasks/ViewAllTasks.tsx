@@ -21,9 +21,9 @@ interface ViewAllTasksProps {
 }
 
 export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
-    const { setEdit, setTaskId, setOpenTaskDialog} = appProps;
+    const { setEdit, setTaskId, setOpenTaskDialog } = appProps;
     const [status, setStatus] = useState("");
-    const [priority, setPriority] = useState("");   
+    const [priority, setPriority] = useState("");
     const [dueDate, setDueDate] = useState('');
 
     const tasks = FetchTasks();
@@ -34,7 +34,7 @@ export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
 
     const filteredTasks = tasks.filter(task => (status ? task.status === status : true))
         .filter(task => (priority ? task.priority === priority : true))
-        .filter(task => (dueDate ? task.dueDate.slice(0, 10) === dueDate: true));
+        .filter(task => (dueDate ? task.dueDate.slice(0, 10) === dueDate : true));
 
     const onEditClick = (id: number) => {
         setOpenTaskDialog(true);
@@ -47,21 +47,21 @@ export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
         setPriority('');
     }
 
-    return (     
+    return (
         <Stack spacing={2}>
             <Typography variant='h3' sx={{ pb: 3, color: 'primary.main' }}>My List of Tasks</Typography>
-            <Stack direction='row' justifyContent="space-between" sx={{ height: 40, boxShadow: 3, p:1 }}  >       
-                <TextField sx={{ '& .MuiInputBase-root': {height: '40px',},  }} 
+            <Stack direction='row' justifyContent="space-between" sx={{ height: 40, boxShadow: 3, p: 1 }}  >
+                <TextField sx={{ '& .MuiInputBase-root': { height: '40px', }, }}
                     type="date"
                     value={dueDate}
-                    onChange={(e) => setDueDate(e.target.value)}           
+                    onChange={(e) => setDueDate(e.target.value)}
                     name="dueDate"
                 />
                 <Select
                     displayEmpty
-                    value={priority||''}
+                    value={priority || ''}
                     onChange={(e) => setPriority(e.target.value)}
-                    sx={{ minWidth: 120 }}  
+                    sx={{ minWidth: 120 }}
                 >
                     <MenuItem value=''>All priorities</MenuItem>
                     {priorityOptions.map((option) => (
@@ -72,9 +72,9 @@ export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
                 </Select>
                 <Select
                     displayEmpty
-                    value={status||''}
+                    value={status || ''}
                     onChange={(e) => setStatus(e.target.value)}
-                    sx={{ minWidth: 120 }}  
+                    sx={{ minWidth: 120 }}
                 >
                     <MenuItem value=''>All statuses</MenuItem>
                     {statusOptions.map((option) => (
@@ -83,8 +83,8 @@ export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
                         </MenuItem>
                     ))}
                 </Select>
-                <Tooltip title={`Clear filters`} placement="top"  arrow>
-                    <Button onClick={onClearClick}>                                    
+                <Tooltip title={`Clear filters`} placement="top" arrow>
+                    <Button onClick={onClearClick}>
                         <ClearIcon />
                     </Button>
                 </Tooltip>
@@ -102,8 +102,8 @@ export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
                     {(status || priority || dueDate ? filteredTasks : tasks).map((task) => (
                         <TableRow key={task.id}>
                             {Object.keys(task).map((key) =>
-                                <TableCell key={key} sx={{ maxWidth: '300px',wordWrap: 'break-word', whiteSpace: 'normal' }}>
-                                    {key === 'dueDate'  ?
+                                <TableCell key={key} sx={{ maxWidth: '300px', wordWrap: 'break-word', whiteSpace: 'normal' }}>
+                                    {key === 'dueDate' ?
                                         new Date(task[key]).toLocaleDateString() :
                                         task[key] as React.ReactNode}
                                 </TableCell>
@@ -115,7 +115,7 @@ export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
                                     </Button>
                                 </Tooltip>
                                 <Tooltip title={`Delete task ${task.title}`} arrow>
-                                    <Button  onClick={() => DeleteTask(task.id)}                                    >
+                                    <Button onClick={() => DeleteTask(task.id)}                                    >
                                         <DeleteForeverIcon />
                                     </Button>
                                 </Tooltip>
