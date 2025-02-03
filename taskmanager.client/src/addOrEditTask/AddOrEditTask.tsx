@@ -1,4 +1,4 @@
-import {  Select, Stack, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, MenuItem } from "@mui/material";
+import { Select, Stack, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, MenuItem } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { PostTask } from "../taskAPIs/PostTask";
 import { I_AllTasks } from "../taskAPIs/I_AllTasks";
@@ -13,7 +13,7 @@ interface AddOrEditTaskProps {
 }
 
 export const AddOrEditTask: React.FC<AddOrEditTaskProps> = ({ appProps }) => {
-    const { edit, setEdit, taskId, setTaskId, openTaskDialog, setOpenTaskDialog } = appProps;
+    const { edit, setEdit, taskId, setTaskId, openTaskDialog, setOpenTaskDialog, reload, setReload } = appProps;
     const [status, setStatus] = useState("");
     const [priority, setPriority] = useState("");
     const [dueDate, setDueDate] = useState('');
@@ -32,11 +32,15 @@ export const AddOrEditTask: React.FC<AddOrEditTaskProps> = ({ appProps }) => {
             priority: formJson['priority'] as string,
             status: formJson['status'] as string,
         };
-        if (taskId) { await UpdateTask(taskId, taskData); }
+        if (taskId) {
+            await UpdateTask(taskId, taskData);
+            setTaskId(null);
+        }
         else { await PostTask(taskData); }
         setOpenTaskDialog(false);
+        setReload(!reload);
     };
-    
+
     const onCloseClick = () => {
         setOpenTaskDialog(false);
         setEdit(false);
@@ -92,7 +96,7 @@ export const AddOrEditTask: React.FC<AddOrEditTaskProps> = ({ appProps }) => {
                         <Select
                             required
                             labelId="status-label"
-                            value={status || dataById.status || statusOptions[0]} 
+                            value={status || dataById.status || statusOptions[0]}
                             onChange={(e) => setStatus(e.target.value)}
                             name="status"
                         >
@@ -105,7 +109,7 @@ export const AddOrEditTask: React.FC<AddOrEditTaskProps> = ({ appProps }) => {
                         <Select
                             required
                             labelId="priority-label"
-                            value={priority ||dataById.priority|| priorityOptions[0]}
+                            value={priority || dataById.priority || priorityOptions[0]}
                             onChange={(e) => setPriority(e.target.value)}
                             label="priority"
                             name="priority"
@@ -121,16 +125,16 @@ export const AddOrEditTask: React.FC<AddOrEditTaskProps> = ({ appProps }) => {
                             InputLabelProps={{ shrink: true }}
                             required
                             type='date'
-                            value={dueDate || dataById.dueDate?.slice(0, 10)||'' }
+                            value={dueDate || dataById.dueDate?.slice(0, 10) || ''}
                             defaultValue={taskId ? dataById.dueDate?.slice(0, 10) : dueDate}
-                            onChange={(e)=>setDueDate(e.target.value)}
+                            onChange={(e) => setDueDate(e.target.value)}
                             name="dueDate"
                         />
                     </Stack>
                     <DialogActions>
                         {edit ?
                             <Button type="submit" variant='outlined'>Update</Button> :
-                            <Button type="submit"variant='outlined'>Submit</Button>
+                            <Button type="submit" variant='outlined'>Submit</Button>
                         }
                     </DialogActions>
                 </form>

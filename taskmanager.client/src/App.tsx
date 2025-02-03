@@ -9,11 +9,13 @@ function App() {
     const [openTaskDialog, setOpenTaskDialog] = useState(false);
     const [edit, setEdit] = useState(false);
     const [taskId, setTaskId] = useState<number | null>(null);
+    const [reload, setReload] = useState(false);
 
     const appProps: AppProps = {
         edit, setEdit,
         taskId, setTaskId,
-        openTaskDialog, setOpenTaskDialog
+        openTaskDialog, setOpenTaskDialog,
+        reload, setReload
     };
 
     return (

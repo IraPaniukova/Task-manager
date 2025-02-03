@@ -1,6 +1,6 @@
 
 import { TextField, Button, Typography, Stack, Tooltip, Select, MenuItem } from "@mui/material";
-import { FetchTasks } from "../taskAPIs/FetchTasks";
+import { useFetchTasks } from "../taskAPIs/FetchTasks";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -21,12 +21,12 @@ interface ViewAllTasksProps {
 }
 
 export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
-    const { setEdit, setTaskId, setOpenTaskDialog } = appProps;
+    const { setEdit, setTaskId, setOpenTaskDialog, reload, setReload } = appProps;
     const [status, setStatus] = useState("");
     const [priority, setPriority] = useState("");
     const [dueDate, setDueDate] = useState('');
 
-    const tasks = FetchTasks();
+    const tasks = useFetchTasks(reload);
     if (tasks.length === 0) {
         return <Typography>Loading tasks...</Typography>;
     }
@@ -46,18 +46,24 @@ export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
         setStatus('');
         setPriority('');
     }
+    const onDeleteClick = (id: number) => {
+        DeleteTask(id);
+        setReload(!reload);
+    }
 
     return (
         <Stack spacing={2}>
             <Typography variant='h3' sx={{ pb: 3, color: 'primary.main' }}>My List of Tasks</Typography>
             <Stack direction='row' justifyContent="space-between" sx={{ height: 40, boxShadow: 3, p: 1 }}  >
                 <TextField sx={{ '& .MuiInputBase-root': { height: '40px', }, }}
+                    aria-label="Choose due date"
                     type="date"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
                     name="dueDate"
                 />
                 <Select
+                    aria-label="Choose priority"
                     displayEmpty
                     value={priority || ''}
                     onChange={(e) => setPriority(e.target.value)}
@@ -71,24 +77,25 @@ export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
                     ))}
                 </Select>
                 <Select
+                    aria-label="Choose status"
                     displayEmpty
                     value={status || ''}
                     onChange={(e) => setStatus(e.target.value)}
                     sx={{ minWidth: 120 }}
                 >
                     <MenuItem value=''>All statuses</MenuItem>
-                    {statusOptions.map((option) => (
-                        <MenuItem key={option} value={option}>
+                    {statusOptions.map((option, index) => (
+                        <MenuItem key={option} value={option} data-testid={`statusItem${index}`}>
                             {option}
                         </MenuItem>
                     ))}
                 </Select>
                 <Tooltip title={`Clear filters`} placement="top" arrow>
-                    <Button onClick={onClearClick}>
+                    <Button onClick={onClearClick} aria-label="Clear filters">
                         <ClearIcon />
                     </Button>
                 </Tooltip>
-                <Button variant='outlined' onClick={() => setOpenTaskDialog(true)}> Add new</Button>
+                <Button aria-label="Add task" variant='outlined' onClick={() => setOpenTaskDialog(true)}> Add new</Button>
             </Stack>
             <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
                 <Table sx={{ minWidth: 650 }} stickyHeader aria-label="sticky table">
@@ -110,12 +117,13 @@ export const ViewAllTasks: React.FC<ViewAllTasksProps> = ({ appProps }) => {
                             )}
                             <TableCell>
                                 <Tooltip title={`Edit task ${task.title}`} arrow>
-                                    <Button onClick={() => onEditClick(task.id)}>
+                                    <Button aria-label={`Edit task ${task.id}`} onClick={() => onEditClick(task.id)} >
                                         <ModeEditIcon />
                                     </Button>
                                 </Tooltip>
                                 <Tooltip title={`Delete task ${task.title}`} arrow>
-                                    <Button onClick={() => DeleteTask(task.id)}                                    >
+                                    <Button aria-label={`Delete task ${task.id}`}
+                                        onClick={() => onDeleteClick(task.id)}                                    >
                                         <DeleteForeverIcon />
                                     </Button>
                                 </Tooltip>

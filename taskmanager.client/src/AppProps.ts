@@ -5,4 +5,6 @@ export interface AppProps {
   setTaskId: (value: number | null) => void;
   openTaskDialog: boolean;
   setOpenTaskDialog: (value: boolean) => void;
+  reload: boolean;
+  setReload: (value: boolean) => void;
 }

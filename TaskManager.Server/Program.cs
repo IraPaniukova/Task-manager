@@ -20,7 +20,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: allowCORS,
           policy =>
            {
-           policy.WithOrigins("https://localhost:53315");//frontend host
+           policy.WithOrigins("https://localhost:53315") //frontend host
+                  .AllowAnyHeader()  
+                  .AllowAnyMethod(); 
            });
 });
 
@@ -29,6 +31,7 @@ var app = builder.Build();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseCors(allowCORS);
+app.UseRouting();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
